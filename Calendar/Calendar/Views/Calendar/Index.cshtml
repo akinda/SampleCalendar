@@ -1,0 +1,93 @@
+﻿@model DateTime?
+
+<div style="margin-top: 20px; min-height: 70%;" >
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h1>Calendar</h1>                                               
+                <div id="datepicker"></div>
+            </div>
+            <div class="col-md-8">
+                <h2>Appointments for <span id="selectedDate"></span> </h2>
+                <div  id="addAppt">
+                    <span style="font-weight: 500">Add new appointment</span>                    
+                    <button style="background-color: palegreen;" data-bind="click: $root.newAppointmentClicked"><i class="fas fa-plus"></i></button>
+                </div>
+
+                <ul style="list-style: none; padding-left: 0px; margin-top: 30px" data-bind="foreach: appointmentsForDay, visible: appointmentsForDay().length > 0">
+                    <li style="margin: 10px 0px">                                                                                                       
+                        <div class="btn btn-primary" disabled="disabled">
+                            <span data-bind="text: startTime"></span> 
+                            <span>-</span> 
+                            <span data-bind="text: endTime"></span>                            
+                        </div>                                                   
+
+                        <span data-bind="text: message" style="display: inline-block; padding-left: 10px"></span> 
+
+                        <a href="#" data-bind="click: $parent.editAppointmentClicked, visible: $root.dateIsPast == false">
+                            <span style="padding-left: 10px">
+                                <i class="fas fa-edit"></i>
+                            </span>
+                        </a>
+                        
+                        <div style="clear:both"></div>
+                    </li>
+                </ul>       
+                
+                <div style="margin-top: 30px; border:dashed; border-color: gray; padding: 20px; text-align: center" data-bind="visible: appointmentsForDay().length == 0 && dateIsPast == false">
+                    There are no appointments on this day ... please add some 
+                </div>
+
+                <div style="margin-top: 30px; border:dashed; border-color: gray; padding: 20px; text-align: center" data-bind="visible: appointmentsForDay().length == 0 && dateIsPast == true">
+                    Date past ... and no appointments were added on this day
+                </div>
+
+                <div class="panel panel-primary" style="margin-top: 15px" data-bind="visible: editClickedItem().id != null">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <span data-bind="visible: editClickedItem().id != -1">Edit Appointment</span>
+                            <span  data-bind="visible: editClickedItem().id == -1">New Appointment</span>
+                            <span data-bind="visible: editClickedItem().id != -1, text: itemId"></span>
+                            <a href="#" data-bind="click: $root.closeEditBoxClicked">
+                                <span style="float: right;"><i class="fas fa-window-close"></i></span>
+                            </a>
+                        </h3>
+                        
+                    </div>
+                    <div class="panel-body">
+                        
+                        <div style="margin: 10px 0px; font-weight: bold">
+                            Choose from available times
+                        </div>                        
+
+                        <div class="btn-group" role="group" data-bind="foreach: openTimeSlotsForDay">
+                            <button type="button" class="btn btn-default timeSlot" data-bind="click: $root.newSlotClicked">
+                                <span data-bind="text: startTime"></span>
+                                <span>-</span>
+                                <span data-bind="text: endTime"></span>
+                            </button>                            
+                        </div>
+
+                        <div style="margin: 10px 0px; font-weight: bold">
+                            Message (Optional)
+                        </div>
+
+                        <div>
+                            <textarea id="newMessage" data-bind="text: editClickedItem().message" style="width: 90%; min-height: 150px;" placeholder="Enter optional message"></textarea>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-default" style="margin: 20px" data-bind="click: $root.saveUpdatedAppointmentClicked">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>    
+</div>
+
+@section Scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="~/scripts/calendar.js" type="text/javascript"></script>    
+}

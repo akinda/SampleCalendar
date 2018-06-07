@@ -1,0 +1,22 @@
+{
+  "name": "calendar",
+  "version": "1.0.0",
+  "description": "Calendar scheduling API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js --ignore loki_db.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "lokijs": "^1.5.5",
+    "moment": "^2.22.2",
+    "moment-timezone": "^0.5.17"
+  }
+}
