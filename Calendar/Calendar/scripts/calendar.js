@@ -51,8 +51,8 @@ var calendarModule = (function ($, ko) {
                 return {
                     id: x.id,
                     message: x.message,
-                    startTime: moment(parseInt(x.date)).format('hh mm A'),
-                    endTime: moment((parseInt(x.date) + self.timeBlockIncrements)).format('hh mm A'),
+                    startTime: moment(parseInt(x.date)).format('hh:mm A'),
+                    endTime: moment((parseInt(x.date) + self.timeBlockIncrements)).format('hh:mm A'),
                     date: parseInt(x.date)
                 };
             });
@@ -258,18 +258,12 @@ var calendarModule = (function ($, ko) {
             });
         }
 
-
-
         $("#datepicker").datepicker({
             onSelect: function (dateText, input) {
                 //console.log(`Selected date: ${dateText}; input's last value: ${input.lastVal} and new value is ${this.value}`);
-                $(this).change();
+                self.dateChanged();                
             }
-        });
-
-        $("#datepicker").change(function () {
-            self.dateChanged();
-        });
+        });        
 
         self.dateChanged();
     }

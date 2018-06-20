@@ -16,7 +16,7 @@ namespace Calendar
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Calendar", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "NewCalendar", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

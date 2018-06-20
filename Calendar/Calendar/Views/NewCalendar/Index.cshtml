@@ -1,0 +1,112 @@
+﻿@model Calendar.Models.ApptModel
+
+@{
+    ViewBag.Title = "MVC Calendar Scheduler";
+}
+  
+<div style="margin-top: 20px; min-height: 70%;">
+    <div class="row">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="col-md-4">
+                <h1>Calendar</h1>            
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AppointmentDate, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.AppointmentDate, new { htmlAttributes = new { Value = Model.AppointmentDate.ToString("dd-MMM-yyyy"), @class = "form-control datepicker", onkeydown = "return false", onpaste = "return false" } })
+                            @Html.ValidationMessageFor(model => model.AppointmentDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>                    
+                </div>                
+            </div>
+        }
+        <div class="col-md-8">           
+            <h2>Appointments for @Model.AppointmentDate.ToString("ddd, MMMM dd yyyy")</h2>
+
+            @if (Model.isPast() == false)
+            {
+                <div id="addAppt">
+                    <span style="font-weight: 500">Add new appointment</span>
+                    <button style="background-color: palegreen;" onclick="location.href='@Url.Action("Index", "AddAppointment")'"><i class="fas fa-plus"></i></button>
+                </div>
+            }            
+
+            <ul style="list-style: none; padding-left: 0px; margin-top: 30px">
+                @if (Model.Appointments != null && Model.Appointments.data != null)
+                {
+                    foreach (var item in Model.Appointments.data)
+                    {
+                        <li style="margin: 10px 0px">
+                            <div class="btn btn-primary" disabled="disabled">
+                                <span>@item.startTime</span>
+                                <span>-</span>
+                                <span>@item.endTime</span>
+                            </div>
+
+                            <span style="display: inline-block; padding-left: 10px">@item.message</span>
+
+                            <a href="#">
+                                <span style="padding-left: 10px">
+                                    @if (Model.isPast() == false)
+                                    {
+                                        <i class="fas fa-edit"></i>
+                                    }                                    
+                                </span>
+                            </a>                            
+
+                            <div style="clear:both"></div>
+                        </li>
+                    }
+                }
+            </ul>                                      
+
+            @if (Model.Appointments != null && Model.Appointments.data.Count == 0 && Model.isPast() == false)
+            {
+                <div style="margin-top: 30px; border:dashed; border-color: gray; padding: 20px; text-align: center">
+                    There are no appointments on this day ... please add some
+                </div>
+            }
+
+            @if (Model.Appointments != null && Model.Appointments.data.Count == 0 && Model.isPast() == true)
+            {
+                <div style="margin-top: 30px; border:dashed; border-color: gray; padding: 20px; text-align: center">
+                    Date past ... and no appointments were added on this day
+                </div>
+            }
+        </div>        
+     </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            //Init Date Picker
+            $(".datepicker").datepicker({
+                dateFormat: "dd-M-yy",
+                onSelect: function (dateText, input) {
+                    console.log("Date changed");
+                    console.log(`Selected date: ${dateText}; input's last value: ${input.lastVal} and new value is ${this.value}`);
+                    $(this).closest('form').submit();
+                }
+            });
+
+            //Turn clicks to post requests
+            $("a[data-form-method='post']").click(function (event) {
+                event.preventDefault();
+                var element = $(this);
+                var action = element.attr("href");
+                element.closest("form").each(function () {
+                    var form = $(this);
+                    form.attr("action", action);
+                    form.submit();
+                });
+            });
+
+        });
+    </script>
+}
